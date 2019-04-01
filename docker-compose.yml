@@ -1,0 +1,58 @@
+---
+  version: '3.7'
+
+  x-config:
+    &secrets-config
+    secrets:
+      - source: tomcat_ssl_crt
+        target: /home/spring/tomcat-wildcard-ssl.crt
+      - source: tomcat_ssl_key
+        target: /home/spring/tomcat-wildcard-ssl.key
+
+  secrets:
+    tomcat_ssl_crt:
+      file: ./docker/certificates/tomcat-wildcard.crt
+    tomcat_ssl_key:
+      file: ./docker/certificates/tomcat-wildcard.key
+
+  services:
+    aqcu-svp-report:
+      build: .
+      image: aqcu-svp-report
+      ports:
+        - "7509:7509"
+      << : *secrets-config
+      volumes: 
+        - ./docker/certificates/import_certs:/certificates:ro
+      env_file:
+        - ./docker/config.env
+        - ./docker/secrets.env
+
+    aqcu-svp-report-local-dev:
+      build: .
+      image: aqcu-svp-report
+      network_mode: "host"
+      ports:
+        - "7509:7509"
+      << : *secrets-config
+      volumes: 
+        - ./docker/certificates/import_certs:/certificates:ro
+      env_file:
+        - ./docker/config.env
+        - ./docker/secrets.env
+
+    aqcu-svp-report-debug:
+      build: .
+      image: aqcu-svp-report
+      network_mode: "host"
+      ports:
+        - "7509:7509"
+        - "8000:8000"
+      << : *secrets-config
+      volumes: 
+        - ./docker/certificates/import_certs:/certificates:ro
+      environment:
+        - JAVA_OPTIONS="-agentlib:jdwp=transport=dt_socket,server=y,address=8000,suspend=n"
+      env_file:
+        - ./docker/config.env
+        - ./docker/secrets.env

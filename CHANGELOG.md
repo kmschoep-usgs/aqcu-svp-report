@@ -10,9 +10,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 - Add debug logging statements
 - Enable logging of application
 - Add jacoco and coveralls to pom
+- Docker configuration
 
 ### Changed
 - Update to aqcu-framework version 0.0.6-SNAPSHOT
+- Merged this repository with the docker-aqcu-svp-report repository
 
 ## [0.0.1] - 2019-03-01
 ### Added
