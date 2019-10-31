@@ -102,7 +102,7 @@ public class SiteVisitPeakReportBuilderService {
 		LOG.debug("Process field visits.");
 		for (FieldVisitDescription fieldVisitDescription : fieldVisitDescriptionService.getDescriptions(locationIdentifier, zoneOffset, requestParameters)) {
 			FieldVisitDataServiceResponse fieldVisitDataServiceResponse = fieldVisitDataService.get(fieldVisitDescription.getIdentifier());
-			List<FieldVisitReading> rawReadings = fieldVisitReadingsBuilderService.extractReadings(fieldVisitDescription.getStartTime(), fieldVisitDataServiceResponse, includeInspections, null, null);
+			List<FieldVisitReading> rawReadings = fieldVisitReadingsBuilderService.extractReadings(fieldVisitDescription.getStartTime(), fieldVisitDataServiceResponse, null, includeInspections);
 
 			// Keep only ExtremeMax Readings
 			LOG.debug("Filter ExtremeMax Readings from field visits.");
