@@ -1,6 +1,6 @@
 FROM maven:3.6.0-jdk-8-alpine AS build
 
-#Pass most build args into env vars
+#Pass build args into env vars
 ARG CI
 ENV CI=$CI
 
@@ -10,22 +10,21 @@ ENV SONAR_HOST_URL=$SONAR_HOST_URL
 ARG SONAR_LOGIN
 ENV SONAR_LOGIN=$SONAR_LOGIN
 
-ARG BUILD_COMMAND="mvn -B clean package"
-
-COPY pom.xml /build/pom.xml
-WORKDIR /build
-
 RUN if getent ahosts "sslhelp.doi.net" > /dev/null 2>&1; then \
 		wget 'http://sslhelp.doi.net/docs/DOIRootCA2.cer' && \
 		keytool -import -trustcacerts -file DOIRootCA2.cer -alias DOIRootCA2.cer -keystore $JAVA_HOME/jre/lib/security/cacerts -noprompt -storepass changeit; \
 	fi
 
+COPY pom.xml /build/pom.xml
+WORKDIR /build
+
 #download all maven dependencies (this will only re-run if the pom has changed)
 RUN mvn -B dependency:go-offline
 
-COPY src /build/src
-#include the .git dir for the sonar scanner
+# copy git history into build image so that sonar can report trends over time
 COPY .git /build
+COPY src /build/src
+ARG BUILD_COMMAND="mvn -B clean verify"
 RUN ${BUILD_COMMAND}
 
 FROM usgswma/wma-spring-boot-base:8-jre-slim-0.0.4
