@@ -3,15 +3,13 @@ package gov.usgs.aqcu.calc;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import gov.usgs.aqcu.model.FieldVisitReading;
 
 //TODO needs testing
 public class LastValidVisitCalculator {
-	Map<String, Instant> lastVisitMap = new HashMap<>();
+	Instant lastVisit = null;
 
 	public List<FieldVisitReading> fill(List<FieldVisitReading> readings) {
 		Collections.sort(readings, new Comparator<FieldVisitReading>() {
@@ -35,16 +33,13 @@ public class LastValidVisitCalculator {
 		
 		for(FieldVisitReading reading : readings) {
 			String value = reading.getValue();
-			String method = reading.getMonitoringMethod();
 			
-			if(value != null && (value.matches("[-+]?\\d*\\.?\\d+") || "no mark".equals(value.toLowerCase().trim())) && method != null) {
-				Instant previousDate = lastVisitMap.get(method);
-				
-				if(previousDate != null) {
-					reading.setLastVisitPrior(previousDate);
+			if(value != null && (value.matches("[-+]?\\d*\\.?\\d+") || "no mark".equals(value.toLowerCase().trim())) && reading.getMonitoringMethod() != null) {
+				if(lastVisit != null) {
+					reading.setLastVisitPrior(lastVisit);
 				}
 				
-				lastVisitMap.put(method, reading.getVisitTime());
+				lastVisit = reading.getVisitTime();
 			}
 		}
 		

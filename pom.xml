@@ -8,29 +8,33 @@
 
 
     <properties>
-        <cida.maven.url>https://internal.cida.usgs.gov/maven/content/repositories</cida.maven.url>
-        <wma.artifactory.url>https://cida.usgs.gov/artifactory</wma.artifactory.url>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <additionalparam>-Xdoclint:none</additionalparam>
         <failOnMissingWebXml>false</failOnMissingWebXml>
         <springfox.version>2.8.0</springfox.version>
+        <spring.boot.version>2.2.0.RELEASE</spring.boot.version>
         <aquarius.sdk.version>18.8.1</aquarius.sdk.version>
-        <aqcu.framework.version>0.0.6-SNAPSHOT</aqcu.framework.version>
+        <aqcu.framework.version>0.0.8-SNAPSHOT</aqcu.framework.version>
     </properties>
 
     <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.13.RELEASE</version>
+        <groupId>gov.usgs.water</groupId>
+        <artifactId>code-quality</artifactId>
+        <version>1.1.0</version>
     </parent>
 
     <repositories>
         <repository>
+            <id>wma-maven-centralized</id>
+            <name>Water Mission Area Snapshots and Releases</name>
+            <url>https://cida.usgs.gov/artifactory/wma-maven-centralized</url>
+        </repository>
+        <repository>
             <id>aqcu-maven-centralized</id>
             <name>AQCU Maven Centralized (Artifactory)</name>
-            <url>${wma.artifactory.url}/aqcu-maven-centralized/</url>
+            <url>https://cida.usgs.gov/artifactory/aqcu-maven-centralized</url>
         </repository>
     </repositories>
 
@@ -39,7 +43,14 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>Edgware.SR3</version>
+                <version>Greenwich.SR3</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -48,76 +59,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>gov.usgs.aqcu</groupId>
-            <artifactId>aqcu-framework</artifactId>
-            <version>${aqcu.framework.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>gov.usgs.aqcu</groupId>
-            <artifactId>aqcu-framework</artifactId>
-            <version>${aqcu.framework.version}</version>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-config</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-hystrix-dashboard</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-zuul</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-feign</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.openfeign.form</groupId>
-            <artifactId>feign-form-spring</artifactId>
-            <version>3.2.2</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-httpclient</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.retry</groupId>
-            <artifactId>spring-retry</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${springfox.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>${springfox.version}</version>
-        </dependency>
-
-        <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>webjars-locator</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -126,18 +70,26 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-oauth2</artifactId>
         </dependency>
-
         <dependency>
-            <groupId>com.aquaticinformatics</groupId>
-            <artifactId>aquarius.sdk</artifactId>
-            <version>${aquarius.sdk.version}</version>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${springfox.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${springfox.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>gov.usgs.aqcu</groupId>
+            <artifactId>aqcu-framework</artifactId>
+            <version>${aqcu.framework.version}</version>
         </dependency>
         <dependency>
             <groupId>javax.xml.bind</groupId>
             <artifactId>jaxb-api</artifactId>
             <version>2.3.0</version>
         </dependency>
-
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
@@ -145,16 +97,17 @@
 
         <!--  Testing/Development  -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
-            <optional>true</optional>
+            <groupId>gov.usgs.aqcu</groupId>
+            <artifactId>aqcu-framework</artifactId>
+            <version>${aqcu.framework.version}</version>
+            <type>test-jar</type>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>
@@ -162,41 +115,49 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.1.1</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.eluder.coveralls</groupId>
-		<artifactId>coveralls-maven-plugin</artifactId>
-		<version>4.3.0</version>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>4.3.0</version>
+                <dependencies>
+                    <!-- https://github.com/trautonen/coveralls-maven-plugin/issues/112 -->
+                    <dependency>
+                        <groupId>javax.xml.bind</groupId>
+                        <artifactId>jaxb-api</artifactId>
+                        <version>2.2.3</version>
+                    </dependency>
+                </dependencies>
             </plugin>
             
             <plugin>
                 <groupId>org.jacoco</groupId>
-		<artifactId>jacoco-maven-plugin</artifactId>
-		<version>0.7.9</version>
-                    <executions>
-                        <execution>
-                            <id>prepare-agent</id>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-				</goals>
-			</execution>
-                    </executions>
-                    <configuration>
-                        <excludes>
-                            <exclude>gov/usgs/aqcu/config/*.*</exclude>
-                            <exclude>gov/usgs/aqcu/serializer/SwaggerGsonSerializer.class</exclude>
-                            <exclude>gov/usgs/aqcu/Application.class</exclude>
-                        </excludes>
-                    </configuration>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>gov/usgs/aqcu/config/*.*</exclude>
+                        <exclude>gov/usgs/aqcu/serializer/SwaggerGsonSerializer.class</exclude>
+                        <exclude>gov/usgs/aqcu/Application.class</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
         </plugins>
     </build>

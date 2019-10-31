@@ -14,7 +14,6 @@ public class SwaggerGsonSerializer implements JsonSerializer<Json> {
 	public JsonElement serialize(Json json, Type type, JsonSerializationContext context) {
 		//This is needed to fix a known bug with Swagger and the Spring GsonHttpMessageConverter
 		//See: https://github.com/springfox/springfox/issues/1608
-		final JsonParser parser = new JsonParser();
-		return parser.parse(json.value());
+		return JsonParser.parseString(json.value());
 	}
 }

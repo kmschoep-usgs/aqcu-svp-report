@@ -11,8 +11,13 @@
     include:
       - name: jacoco
         language: java
+        install:
+          # intentional no-op to prevent running unnecessary maven commands
+          - true
         script:
-          - mvn clean verify jacoco:report coveralls:report
+          # the -D option supresses INFO-level logs about dependency downloads. This enables the build to finish within Travis' log length limit.
+          # The -P option skips the dependency security check in favor of build stability -- the official NVD server is rate-limited, and external builds lack access to our internal NVD mirror
+          - mvn -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn clean verify jacoco:report coveralls:report -P=\!dependency-security-check
       - name: docker_build
         language: bash
         services: docker
@@ -35,4 +40,4 @@
           - sudo sh docker-bench-security.sh -c container_images
           - docker run -d --name db arminc/clair-db
           - docker run -p 6060:6060 --link db:postgres -d --name clair arminc/clair-local-scan:v2.0.3
-          - clair-scanner -c "http://127.0.0.1:6060" --ip "$(ip -4 addr show eth0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')" $DOCKER_IMAGE:latest || true
+          - clair-scanner -c "http://127.0.0.1:6060" --ip "$(ip -4 addr show docker0 | grep -oP '(?<=inet\s)\d+(\.\d+){3}')" $DOCKER_IMAGE:latest || true
