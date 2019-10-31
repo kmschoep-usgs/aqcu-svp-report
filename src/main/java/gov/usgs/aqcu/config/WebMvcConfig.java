@@ -20,10 +20,10 @@ import springfox.documentation.spring.web.json.Json;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/**");
-    }
+	@Override
+	public void addCorsMappings(CorsRegistry registry) {
+		registry.addMapping("/**");
+	}
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
