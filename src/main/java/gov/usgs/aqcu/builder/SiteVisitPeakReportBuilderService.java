@@ -41,8 +41,8 @@ import gov.usgs.aqcu.util.LogExecutionTime;
 
 @Service
 public class SiteVisitPeakReportBuilderService {
-        private static final Logger LOG = LoggerFactory.getLogger(SiteVisitPeakReportBuilderService.class);
-        
+	private static final Logger LOG = LoggerFactory.getLogger(SiteVisitPeakReportBuilderService.class);
+		
 	public static final String REPORT_TITLE = "Site Visit Peak";
 	public static final String REPORT_TYPE = "siteVisitPeak";
 	private static final List<String> includeInspections = Arrays.asList(InspectionType.CrestStageGage.name(), InspectionType.MaximumMinimumGage.name());
@@ -73,39 +73,39 @@ public class SiteVisitPeakReportBuilderService {
 		this.qualifierLookupService = qualifierLookupService;
 	}
 
-        @LogExecutionTime
+	@LogExecutionTime
 	public SiteVisitPeakReport buildReport(SiteVisitPeakRequestParameters requestParameters, String requestingUser) {
 		SiteVisitPeakReport report = new SiteVisitPeakReport();
 		
-                LOG.debug("Get time series descriptions.");
+		LOG.debug("Get time series descriptions.");
 		TimeSeriesDescription primaryDescription = timeSeriesDescriptionListService.getTimeSeriesDescription(requestParameters.getPrimaryTimeseriesIdentifier());
 		
-                LOG.debug("Get zone offset.");
-                ZoneOffset zoneOffset = TimeSeriesUtils.getZoneOffset(primaryDescription);
-		
-                LOG.debug("Get corrected primary time series.");
-                TimeSeriesDataServiceResponse primaryTsCorrected = timeSeriesDataService.get(requestParameters.getPrimaryTimeseriesIdentifier(), requestParameters, zoneOffset, false, false, false, null);
+		LOG.debug("Get zone offset.");
+		ZoneOffset zoneOffset = TimeSeriesUtils.getZoneOffset(primaryDescription);
 
-                LOG.debug("Get field visit data.");
+		LOG.debug("Get corrected primary time series.");
+		TimeSeriesDataServiceResponse primaryTsCorrected = timeSeriesDataService.get(requestParameters.getPrimaryTimeseriesIdentifier(), requestParameters, zoneOffset, false, false, false, null);
+
+		LOG.debug("Get field visit data.");
 		report.setReadings(getFieldVisitReadings(primaryDescription.getLocationIdentifier(), zoneOffset, requestParameters, primaryTsCorrected));
-                
-                LOG.debug("Get time series metadata.");
+				
+		LOG.debug("Get time series metadata.");
 		report.setReportMetadata(getMetadata(requestParameters, primaryDescription, primaryTsCorrected));
 		return report;
 	}
 
-        @LogExecutionTime
+	@LogExecutionTime
 	protected List<FieldVisitReading> getFieldVisitReadings(String locationIdentifier, ZoneOffset zoneOffset, SiteVisitPeakRequestParameters requestParameters, TimeSeriesDataServiceResponse primaryTsCorrected) {
 		List<FieldVisitReading> readings = new ArrayList<>();
 
 		// Process field visits
-                LOG.debug("Process field visits.");
+		LOG.debug("Process field visits.");
 		for (FieldVisitDescription fieldVisitDescription : fieldVisitDescriptionService.getDescriptions(locationIdentifier, zoneOffset, requestParameters)) {
 			FieldVisitDataServiceResponse fieldVisitDataServiceResponse = fieldVisitDataService.get(fieldVisitDescription.getIdentifier());
-			List<FieldVisitReading> rawReadings = fieldVisitReadingsBuilderService.extractReadings(fieldVisitDescription.getStartTime(), fieldVisitDataServiceResponse, null, includeInspections);
+			List<FieldVisitReading> rawReadings = fieldVisitReadingsBuilderService.extractReadings(fieldVisitDescription.getStartTime(), fieldVisitDataServiceResponse, includeInspections, null, null);
 
 			// Keep only ExtremeMax Readings
-                        LOG.debug("Filter ExtremeMax Readings from field visits.");
+			LOG.debug("Filter ExtremeMax Readings from field visits.");
 			if(rawReadings != null && !rawReadings.isEmpty()) {
 				readings.addAll(rawReadings.stream()
 					.filter(r -> ReadingType.ExtremeMax.equals(r.getReadingType()))
@@ -119,7 +119,7 @@ public class SiteVisitPeakReportBuilderService {
 		new LastValidVisitCalculator().fill(readings);
 
 		// Add associated IV data
-                LOG.debug("Add associated instantaneous values to ExtremeMax readings");
+		LOG.debug("Add associated instantaneous values to ExtremeMax readings");
 		for(FieldVisitReading reading : readings) {
 			addAssociatedIvDataToReading(reading, primaryTsCorrected);
 		}
@@ -127,13 +127,13 @@ public class SiteVisitPeakReportBuilderService {
 		return readings;
 	}
 
-        @LogExecutionTime
+	@LogExecutionTime
 	protected FieldVisitReading addAssociatedIvDataToReading(FieldVisitReading reading, TimeSeriesDataServiceResponse primaryTsCorrected) {
 		if (null != reading.getLastVisitPrior()) {
-                        LOG.debug("Get time series points between field visits.");
+			LOG.debug("Get time series points between field visits.");
 			List<TimeSeriesPoint> points = getPointsBetweenDates(reading.getLastVisitPrior(), reading.getVisitTime(), primaryTsCorrected.getPoints());
-                        
-                        LOG.debug("Get associated qualifiers.");
+						
+			LOG.debug("Get associated qualifiers.");
 			List<AssociatedIvQualifier> qualifiers = getQualifiersBetweenDates(reading.getLastVisitPrior(), reading.getVisitTime(), primaryTsCorrected.getQualifiers())
 				.stream().map(q -> new AssociatedIvQualifier(q)).collect(Collectors.toList());
 			
@@ -152,11 +152,11 @@ public class SiteVisitPeakReportBuilderService {
 		return reading;
 	}
 
-        @LogExecutionTime
+	@LogExecutionTime
 	protected List<TimeSeriesPoint> getPointsBetweenDates(Instant startDate, Instant endDate, List<TimeSeriesPoint> points) {
 		if(points != null && !points.isEmpty()) {
 			List<TimeSeriesPoint> filteredPoints = new ArrayList<>();
-                        LOG.debug("Filter time series points by start and end dates.");
+			LOG.debug("Filter time series points by start and end dates.");
 			for(TimeSeriesPoint point : points) {
 				if(startDate.compareTo(point.getTimestamp().getDateTimeOffset()) <= 0 &&
 					endDate.compareTo(point.getTimestamp().getDateTimeOffset()) > 0) 
@@ -170,11 +170,11 @@ public class SiteVisitPeakReportBuilderService {
 		return new ArrayList<>();
 	}
 
-        @LogExecutionTime
+	@LogExecutionTime
 	protected List<Qualifier> getQualifiersBetweenDates(Instant startDate, Instant endDate, List<Qualifier> qualifiers) {
 		if(qualifiers != null && !qualifiers.isEmpty()) {
 			List<Qualifier> filteredQualifiers = new ArrayList<>();
-                        LOG.debug("Filter qualifiers by start and end dates of the time series points.");
+			LOG.debug("Filter qualifiers by start and end dates of the time series points.");
 			for(Qualifier qual : qualifiers) {
 				if(AqcuTimeUtils.doesTimeRangeOverlap(startDate, endDate, qual.getStartTime(), qual.getEndTime())) {
 					filteredQualifiers.add(qual);
@@ -186,7 +186,7 @@ public class SiteVisitPeakReportBuilderService {
 		return new ArrayList<>();
 	}
 
-        @LogExecutionTime
+	@LogExecutionTime
 	protected SVPReportMetadata getMetadata(SiteVisitPeakRequestParameters requestParameters, TimeSeriesDescription primaryDescription, TimeSeriesDataServiceResponse primaryTsCorrected) {
 		SVPReportMetadata metadata = new SVPReportMetadata();
 		metadata.setTitle(REPORT_TITLE);

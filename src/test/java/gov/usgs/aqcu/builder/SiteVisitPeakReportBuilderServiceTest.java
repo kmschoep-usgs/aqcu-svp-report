@@ -232,7 +232,7 @@ public class SiteVisitPeakReportBuilderServiceTest {
 		List<FieldVisitReading> result = service.getFieldVisitReadings("location", ZoneOffset.UTC, new SiteVisitPeakRequestParameters(), tsData);
 		assertEquals(result.size(), 4);
 		assertNull(result.get(0).getLastVisitPrior());
-		assertNull(result.get(1).getLastVisitPrior());
+		assertNotNull(result.get(1).getLastVisitPrior());
 		assertNotNull(result.get(2).getLastVisitPrior());
 		assertNotNull(result.get(3).getLastVisitPrior());
 		assertEquals(result.get(0).getComments().get(0), "test-ExtremeMax");
