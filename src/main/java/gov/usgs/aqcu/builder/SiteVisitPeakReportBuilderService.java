@@ -7,6 +7,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,7 +98,7 @@ public class SiteVisitPeakReportBuilderService {
 
 	@LogExecutionTime
 	protected List<FieldVisitReading> getFieldVisitReadings(String locationIdentifier, ZoneOffset zoneOffset, SiteVisitPeakRequestParameters requestParameters, TimeSeriesDataServiceResponse primaryTsCorrected) {
-		List<FieldVisitReading> readings = new ArrayList<>();
+		List<Pair<String, FieldVisitReading>> visitReadings = new ArrayList<>();
 
 		// Process field visits
 		LOG.debug("Process field visits.");
@@ -107,8 +109,9 @@ public class SiteVisitPeakReportBuilderService {
 			// Keep only ExtremeMax Readings
 			LOG.debug("Filter ExtremeMax Readings from field visits.");
 			if(rawReadings != null && !rawReadings.isEmpty()) {
-				readings.addAll(rawReadings.stream()
+				visitReadings.addAll(rawReadings.stream()
 					.filter(r -> ReadingType.ExtremeMax.equals(r.getReadingType()))
+					.map(r -> new ImmutablePair<String, FieldVisitReading>(fieldVisitDescription.getIdentifier(), r))
 					.collect(Collectors.toList())
 				);
 			}
@@ -116,7 +119,7 @@ public class SiteVisitPeakReportBuilderService {
 
 		// Process Extracted Readings
 		// Add last valid visits
-		new LastValidVisitCalculator().fill(readings);
+		List<FieldVisitReading> readings = new LastValidVisitCalculator().fill(visitReadings);
 
 		// Add associated IV data
 		LOG.debug("Add associated instantaneous values to ExtremeMax readings");
