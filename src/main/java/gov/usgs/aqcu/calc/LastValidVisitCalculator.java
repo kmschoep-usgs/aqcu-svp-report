@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -43,8 +45,38 @@ public class LastValidVisitCalculator {
 		}
 	};
 
+	protected enum MethodCategory {
+		CRESTSTAGE("crest stage"),
+		MAXMIN("max-min indicator"),
+		HIGHWATERMARK("high water mark");
+
+		private String methodIdentifier;
+		MethodCategory(String methodIdentifier) {
+			this.methodIdentifier = methodIdentifier;
+		}
+
+		public String getMethodIdentifier() {
+			return methodIdentifier;
+		}
+	};
+
+	public String getMethodCategory(String method) {
+		for(MethodCategory category : MethodCategory.values()) {
+			if (method.toLowerCase().contains(category.getMethodIdentifier())) {
+				return category.getMethodIdentifier();
+			}
+		}
+		return "Not Found.";
+	}
+
 	public List<FieldVisitReading> fill(List<Pair<String, FieldVisitReading>> pairs) {
 		Collections.sort(pairs, VISIT_READING_COMPARATOR);
+		// lastVisitMap maps a method string to the last time that method was visited
+		Map<String, Instant> lastVisitMap = new HashMap<>();
+
+		// I need a standardized list of method types.  I could manually add them, but Zack was talking about adding
+		// them as configurations.  What we're looking for right now are
+		// "crest stage", "max-min indicator", "high water mark"
 
 		List<FieldVisitReading> filledReadings = new ArrayList<>();
 
@@ -52,15 +84,28 @@ public class LastValidVisitCalculator {
 			Pair<String, FieldVisitReading> pair = pairs.get(i);
 			FieldVisitReading reading = pair.getRight();
 			
-			if(isValidReading(reading)) {
-				if(curVisitIdentifier != pair.getLeft()) {
-					lastVisitTime = curVisitTime;
-					curVisitIdentifier = pair.getLeft();
-					curVisitTime = pair.getRight().getVisitTime();
+			if(isValidReading(reading) || true) {
+				// Need to set the lastVisitTime based on the last of this type of method.
+				//reading.setLastVisitPrior(lastVisitTime);
+				String monitoringMethod = reading.getMonitoringMethod();
+				String methodCategory = getMethodCategory(monitoringMethod);
+				Instant lastCategoryVisit = lastVisitMap.get(methodCategory);
+				if (lastCategoryVisit != null) {
+					reading.setLastVisitPrior(lastCategoryVisit);
 				}
 
-				reading.setLastVisitPrior(lastVisitTime);
+				System.out.println("RT: " + reading.getVisitTime() + " PT: " + lastCategoryVisit + " (" + monitoringMethod + " - " + methodCategory + ")");
+
+				//if(curVisitIdentifier != pair.getLeft()) { // This needs to be changed to lookup the last of this method
+					//lastVisitTime = curVisitTime;
+				curVisitTime = reading.getVisitTime();
+				lastVisitMap.put(methodCategory, curVisitTime);
+				curVisitIdentifier = pair.getLeft();
+
 			}
+
+
+			//}
 				
 			filledReadings.add(reading);
 		}
