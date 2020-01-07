@@ -74,19 +74,14 @@ public class LastValidVisitCalculator {
 		// lastVisitMap maps a method string to the last time that method was visited
 		Map<String, Instant> lastVisitMap = new HashMap<>();
 
-		// I need a standardized list of method types.  I could manually add them, but Zack was talking about adding
-		// them as configurations.  What we're looking for right now are
-		// "crest stage", "max-min indicator", "high water mark"
-
 		List<FieldVisitReading> filledReadings = new ArrayList<>();
 
 		for(int i = 0; i < pairs.size(); i++) {
 			Pair<String, FieldVisitReading> pair = pairs.get(i);
 			FieldVisitReading reading = pair.getRight();
 			
-			if(isValidReading(reading) || true) {
+			if(isValidReading(reading)) {
 				// Need to set the lastVisitTime based on the last of this type of method.
-				//reading.setLastVisitPrior(lastVisitTime);
 				String monitoringMethod = reading.getMonitoringMethod();
 				String methodCategory = getMethodCategory(monitoringMethod);
 				Instant lastCategoryVisit = lastVisitMap.get(methodCategory);
@@ -94,19 +89,11 @@ public class LastValidVisitCalculator {
 					reading.setLastVisitPrior(lastCategoryVisit);
 				}
 
-				System.out.println("RT: " + reading.getVisitTime() + " PT: " + lastCategoryVisit + " (" + monitoringMethod + " - " + methodCategory + ")");
-
-				//if(curVisitIdentifier != pair.getLeft()) { // This needs to be changed to lookup the last of this method
-					//lastVisitTime = curVisitTime;
 				curVisitTime = reading.getVisitTime();
 				lastVisitMap.put(methodCategory, curVisitTime);
 				curVisitIdentifier = pair.getLeft();
-
 			}
 
-
-			//}
-				
 			filledReadings.add(reading);
 		}
 		
@@ -115,6 +102,6 @@ public class LastValidVisitCalculator {
 
 	private boolean isValidReading(FieldVisitReading reading) {
 		String value = reading.getValue();
-		return value != null && (value.matches("[-+]?\\d*\\.?\\d+") || "no mark".equals(value.toLowerCase().trim())) && reading.getMonitoringMethod() != null;
+		return value != null && (value.matches("[-+]?\\d*\\.?\\d+") || "no mark".equals(value.toLowerCase().trim()) || "over topped".equals(value.toLowerCase().trim())) && reading.getMonitoringMethod() != null;
 	}
 }

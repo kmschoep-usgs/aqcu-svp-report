@@ -229,10 +229,10 @@ public class SiteVisitPeakReportBuilderServiceTest {
 			.setPoints(getTimeSeriesPoints())
 			.setQualifiers(getQualifiers());
 
-		/*List<FieldVisitReading> result = service.getFieldVisitReadings("location", ZoneOffset.UTC, new SiteVisitPeakRequestParameters(), tsData);
+		List<FieldVisitReading> result = service.getFieldVisitReadings("location", ZoneOffset.UTC, new SiteVisitPeakRequestParameters(), tsData);
 		assertEquals(result.size(), 4);
 		assertNull(result.get(0).getLastVisitPrior());
-		assertNull(result.get(1).getLastVisitPrior());
+		assertNotNull(result.get(1).getLastVisitPrior());
 		assertNotNull(result.get(2).getLastVisitPrior());
 		assertNotNull(result.get(3).getLastVisitPrior());
 		assertEquals(result.get(0).getComments().get(0), "test-ExtremeMax");
@@ -251,9 +251,6 @@ public class SiteVisitPeakReportBuilderServiceTest {
 		assertEquals(result.get(3).getParty(), "party-2");
 		assertEquals(result.get(3).getVisitTime(), Instant.parse("2018-02-02T00:00:00Z"));
 		assertEquals(result.get(3).getTime(), Instant.parse("2018-02-03T06:00:00Z"));
-
-		 */
-		assertEquals("", "");
 	}
 
 	@Test
