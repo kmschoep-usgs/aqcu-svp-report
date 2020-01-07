@@ -133,11 +133,7 @@ public class SiteVisitPeakReportBuilderService {
 	@LogExecutionTime
 	protected FieldVisitReading addAssociatedIvDataToReading(FieldVisitReading reading, TimeSeriesDataServiceResponse primaryTsCorrected) {
 		if (null != reading.getLastVisitPrior()) {
-			System.out.println("RT: " + reading.getVisitTime() + " PT: " + reading.getLastVisitPrior() + " (" + reading.getMonitoringMethod() + ")");
-			LOG.debug("Get time series points between field visits.");
 			List<TimeSeriesPoint> points = getPointsBetweenDates(reading.getLastVisitPrior(), reading.getVisitTime(), primaryTsCorrected.getPoints());
-						
-			LOG.debug("Get associated qualifiers.");
 			List<AssociatedIvQualifier> qualifiers = getQualifiersBetweenDates(reading.getLastVisitPrior(), reading.getVisitTime(), primaryTsCorrected.getQualifiers())
 				.stream().map(q -> new AssociatedIvQualifier(q)).collect(Collectors.toList());
 			
