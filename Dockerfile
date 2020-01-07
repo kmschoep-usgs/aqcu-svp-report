@@ -19,12 +19,12 @@ COPY pom.xml /build/pom.xml
 WORKDIR /build
 
 #download all maven dependencies (this will only re-run if the pom has changed)
-#RUN mvn -B dependency:go-offline
+RUN mvn -B dependency:go-offline
 
 # copy git history into build image so that sonar can report trends over time
 COPY .git /build
 COPY src /build/src
-ARG BUILD_COMMAND="mvn -B verify"
+ARG BUILD_COMMAND="mvn -B clean verify"
 RUN ${BUILD_COMMAND}
 
 FROM usgswma/wma-spring-boot-base:8-jre-slim-0.0.4
