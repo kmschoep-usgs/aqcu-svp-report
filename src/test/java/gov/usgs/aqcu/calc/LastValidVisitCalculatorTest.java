@@ -73,18 +73,17 @@ public class LastValidVisitCalculatorTest {
             new ImmutablePair<>("v6", r9)
         );
 
-        /*
         List<FieldVisitReading> results = new LastValidVisitCalculator().fill(pairs);
         assertEquals(9, results.size());
 
         assertEquals("comment1", results.get(0).getComments().get(0));
         assertNull(results.get(0).getLastVisitPrior());
         assertEquals("comment2", results.get(1).getComments().get(0));
-        assertNull(results.get(1).getLastVisitPrior());
+        assertEquals(Instant.parse("2019-01-01T00:00:00Z"), results.get(1).getLastVisitPrior());
         assertEquals("comment3", results.get(2).getComments().get(0));
         assertEquals(Instant.parse("2019-01-01T00:00:00Z"), results.get(2).getLastVisitPrior());
         assertEquals("comment4", results.get(3).getComments().get(0));
-        assertEquals(Instant.parse("2019-01-01T00:00:00Z"), results.get(3).getLastVisitPrior());
+        assertEquals(Instant.parse("2019-02-01T00:00:00Z"), results.get(3).getLastVisitPrior());
         assertEquals("comment5", results.get(4).getComments().get(0));
         assertNull(results.get(4).getLastVisitPrior());
         assertEquals("comment6", results.get(5).getComments().get(0));
@@ -95,8 +94,6 @@ public class LastValidVisitCalculatorTest {
         assertEquals(Instant.parse("2019-03-01T00:00:00Z"), results.get(7).getLastVisitPrior());
         assertEquals("comment9", results.get(8).getComments().get(0));
         assertEquals(Instant.parse("2019-05-01T00:00:00Z"), results.get(8).getLastVisitPrior());
-        */
-        assertEquals("true", "true");
     }
 
     @Test
