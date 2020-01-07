@@ -122,7 +122,6 @@ public class SiteVisitPeakReportBuilderService {
 
 		// Add associated IV data
 		LOG.debug("Add associated instantaneous values to ExtremeMax readings");
-		System.out.println("Adding Iv Data to Reading:");
 		for(FieldVisitReading reading : readings) {
 			addAssociatedIvDataToReading(reading, primaryTsCorrected);
 		}
