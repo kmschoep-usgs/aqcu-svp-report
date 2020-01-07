@@ -19,8 +19,8 @@ public class OAuth2ResourceServerConfig extends ResourceServerConfigurerAdapter 
 	public void configure(HttpSecurity http) throws Exception {
 		http
 			.authorizeRequests()
-				.antMatchers("/", "/swagger-ui.html", "/swagger-resources/**", "/v2/**").permitAll()
-				.antMatchers("/health/**", "/info/**").permitAll()
+				.antMatchers("/", "/swagger-ui.html", "/swagger-resources/**", "/webjars/**", "/v2/**").permitAll()
+				.antMatchers("/actuator/health**", "/actuator/info**").permitAll()
 				.anyRequest().fullyAuthenticated()
 			.and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)

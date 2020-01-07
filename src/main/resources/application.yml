@@ -43,7 +43,7 @@ eureka:
 logging:
   level:
     org:
-      springframework: ${aqcu_springFrameworkLogLevel:INFO}
+      springframework: INFO
 
 feign:
   hystrix:
