@@ -54,20 +54,21 @@ public class LastValidVisitCalculator {
 		MethodCategory(String methodIdentifier) {
 			this.methodIdentifier = methodIdentifier;
 		}
-
 		public String getMethodIdentifier() {
 			return methodIdentifier;
 		}
+
+		public static String getMethodCategory(String method) {
+			for(MethodCategory category : MethodCategory.values()) {
+				if (method.toLowerCase().contains(category.getMethodIdentifier())) {
+					return category.getMethodIdentifier();
+				}
+			}
+			return null;
+		}
 	};
 
-	public static String getMethodCategory(String method) {
-		for(MethodCategory category : MethodCategory.values()) {
-			if (method.toLowerCase().contains(category.getMethodIdentifier())) {
-				return category.getMethodIdentifier();
-			}
-		}
-		return null;
-	}
+
 
 	public List<FieldVisitReading> fill(List<Pair<String, FieldVisitReading>> pairs) {
 		Collections.sort(pairs, VISIT_READING_COMPARATOR);
@@ -83,7 +84,7 @@ public class LastValidVisitCalculator {
 			if(isValidReading(reading)) {
 				// Need to set the lastVisitTime based on the last of this type of method.
 				String monitoringMethod = reading.getMonitoringMethod();
-				String methodCategory = getMethodCategory(monitoringMethod);
+				String methodCategory = MethodCategory.getMethodCategory(monitoringMethod);
 				Instant lastCategoryVisit = lastVisitMap.get(methodCategory);
 				if (lastCategoryVisit != null) {
 					reading.setLastVisitPrior(lastCategoryVisit);
