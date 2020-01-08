@@ -47,9 +47,9 @@ public class Controller {
 	}
 	
 	@GetMapping(value="/rawData", produces={MediaType.APPLICATION_JSON_VALUE})
-	public ResponseEntity<SiteVisitPeakReport> getReportRawData(@Validated SiteVisitPeakRequestParameters requestParameters) throws Exception {
+	public ResponseEntity<String> getReportRawData(@Validated SiteVisitPeakRequestParameters requestParameters) throws Exception {
 		SiteVisitPeakReport report = reportBuilderService.buildReport(requestParameters, getRequestingUser());
-		return new ResponseEntity<SiteVisitPeakReport>(report, new HttpHeaders(), HttpStatus.OK);
+		return new ResponseEntity<String>(gson.toJson(report), new HttpHeaders(), HttpStatus.OK);
 	}
 
 	String getRequestingUser() {
