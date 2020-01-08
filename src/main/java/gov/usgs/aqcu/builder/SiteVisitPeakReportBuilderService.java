@@ -44,7 +44,6 @@ import gov.usgs.aqcu.util.LogExecutionTime;
 @Service
 public class SiteVisitPeakReportBuilderService {
 	private static final Logger LOG = LoggerFactory.getLogger(SiteVisitPeakReportBuilderService.class);
-		
 	public static final String REPORT_TITLE = "Site Visit Peak";
 	public static final String REPORT_TYPE = "siteVisitPeak";
 	private static final List<String> includeInspections = Arrays.asList(InspectionType.CrestStageGage.name(), InspectionType.MaximumMinimumGage.name());
@@ -133,10 +132,7 @@ public class SiteVisitPeakReportBuilderService {
 	@LogExecutionTime
 	protected FieldVisitReading addAssociatedIvDataToReading(FieldVisitReading reading, TimeSeriesDataServiceResponse primaryTsCorrected) {
 		if (null != reading.getLastVisitPrior()) {
-			LOG.debug("Get time series points between field visits.");
 			List<TimeSeriesPoint> points = getPointsBetweenDates(reading.getLastVisitPrior(), reading.getVisitTime(), primaryTsCorrected.getPoints());
-						
-			LOG.debug("Get associated qualifiers.");
 			List<AssociatedIvQualifier> qualifiers = getQualifiersBetweenDates(reading.getLastVisitPrior(), reading.getVisitTime(), primaryTsCorrected.getQualifiers())
 				.stream().map(q -> new AssociatedIvQualifier(q)).collect(Collectors.toList());
 			
