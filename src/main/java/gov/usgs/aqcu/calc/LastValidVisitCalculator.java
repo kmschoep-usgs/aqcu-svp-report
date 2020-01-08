@@ -60,13 +60,13 @@ public class LastValidVisitCalculator {
 		}
 	};
 
-	public String getMethodCategory(String method) {
+	public static String getMethodCategory(String method) {
 		for(MethodCategory category : MethodCategory.values()) {
 			if (method.toLowerCase().contains(category.getMethodIdentifier())) {
 				return category.getMethodIdentifier();
 			}
 		}
-		return "Not Found.";
+		return null;
 	}
 
 	public List<FieldVisitReading> fill(List<Pair<String, FieldVisitReading>> pairs) {
