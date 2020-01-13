@@ -14,8 +14,9 @@
         <additionalparam>-Xdoclint:none</additionalparam>
         <failOnMissingWebXml>false</failOnMissingWebXml>
         <springfox.version>2.8.0</springfox.version>
-        <spring.boot.version>2.2.0.RELEASE</spring.boot.version>
         <aqcu.framework.version>0.0.8-SNAPSHOT</aqcu.framework.version>
+        <spring.boot.version>2.2.2.RELEASE</spring.boot.version>
+        <owasp.dependency.check.version>5.2.4</owasp.dependency.check.version>
     </properties>
 
     <parent>
@@ -52,6 +53,24 @@
                 <version>${spring.boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            
+            <!-- Security Upgrades -->
+            <!-- 1/13/2020 -->
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15on</artifactId>
+                <version>1.64</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-core</artifactId>
+                <version>9.0.30</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.tomcat.embed</groupId>
+                <artifactId>tomcat-embed-websocket</artifactId>
+                <version>9.0.30</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -161,6 +180,19 @@
                         <exclude>gov/usgs/aqcu/Application.class</exclude>
                     </excludes>
                 </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <executions>
+                    <execution>
+                        <id>dependency-security-check</id>
+                        <configuration>
+                            <suppressionFile>dependency-check-suppression.xml</suppressionFile>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
