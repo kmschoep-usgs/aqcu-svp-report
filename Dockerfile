@@ -22,6 +22,7 @@ WORKDIR /build
 RUN mvn -B dependency:go-offline
 
 # copy git history into build image so that sonar can report trends over time
+COPY dependency-check-suppression.xml /build
 COPY .git /build
 COPY src /build/src
 ARG BUILD_COMMAND="mvn -B clean verify"
