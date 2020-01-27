@@ -99,8 +99,6 @@ public class LastValidVisitCalculator {
 				String monitoringMethod = reading.getMonitoringMethod();
 				String methodCategory = MethodCategory.getMethodCategory(monitoringMethod);
 				Instant lastCategoryVisit = lastVisitMap.get(methodCategory);
-				System.out.println(methodCategory);
-				System.out.println(lastCategoryVisit);
 				if (lastCategoryVisit != null) {
 					reading.setLastVisitPrior(lastCategoryVisit);
 				}
