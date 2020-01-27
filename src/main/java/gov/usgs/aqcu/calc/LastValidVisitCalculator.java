@@ -23,6 +23,7 @@ public class LastValidVisitCalculator {
 			FieldVisitReading reading1 = pair1.getRight();
 			FieldVisitReading reading2 = pair2.getRight();
 
+			// Handle null readings
 			if(reading1 == null && reading2 == null) {
 				return 0;
 			}
@@ -39,6 +40,18 @@ public class LastValidVisitCalculator {
 
 			if(sortOrder == 0 && reading1.getTime() != null && reading2.getTime() != null) {
 				sortOrder = reading1.getTime().compareTo(reading2.getTime());
+			}
+
+			// Monitoring Method
+			String r1MonitoringMethod = MethodCategory.getMethodCategory(reading1.getMonitoringMethod());
+			String r2MonitoringMethod = MethodCategory.getMethodCategory(reading2.getMonitoringMethod());
+
+			if(sortOrder == 0 && r1MonitoringMethod != null && r2MonitoringMethod != null) {
+				sortOrder = r1MonitoringMethod.compareTo(r2MonitoringMethod);
+			}
+
+			if(sortOrder == 0 && reading1.getValue() != null && reading2.getValue() != null) {
+				sortOrder = reading1.getValue().compareTo(reading2.getValue());
 			}
 
 			return sortOrder;
