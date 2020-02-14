@@ -3,7 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>gov.usgs.aqcu</groupId>
     <artifactId>aqcu-svp-report</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <!-- Static version that does not change. Versioning handled by Docker image.-->
+    <version>1.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
 
@@ -14,8 +15,8 @@
         <additionalparam>-Xdoclint:none</additionalparam>
         <failOnMissingWebXml>false</failOnMissingWebXml>
         <springfox.version>2.8.0</springfox.version>
-        <aqcu.framework.version>0.0.8-SNAPSHOT</aqcu.framework.version>
-        <spring.boot.version>2.2.2.RELEASE</spring.boot.version>
+        <aqcu.framework.version>0.0.8</aqcu.framework.version>
+        <spring.boot.version>2.2.4.RELEASE</spring.boot.version>
         <owasp.dependency.check.version>5.2.4</owasp.dependency.check.version>
     </properties>
 
@@ -43,7 +44,7 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>Greenwich.SR3</version>
+                <version>Greenwich.SR5</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
