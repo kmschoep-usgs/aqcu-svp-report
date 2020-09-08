@@ -15,7 +15,7 @@
         <additionalparam>-Xdoclint:none</additionalparam>
         <failOnMissingWebXml>false</failOnMissingWebXml>
         <springfox.version>2.8.0</springfox.version>
-        <aqcu.framework.version>0.0.8</aqcu.framework.version>
+        <aqcu.framework.version>0.0.9</aqcu.framework.version>
         <spring.boot.version>2.2.4.RELEASE</spring.boot.version>
         <owasp.dependency.check.version>5.2.4</owasp.dependency.check.version>
     </properties>
@@ -30,12 +30,12 @@
         <repository>
             <id>wma-maven-centralized</id>
             <name>Water Mission Area Snapshots and Releases</name>
-            <url>https://cida.usgs.gov/artifactory/wma-maven-centralized</url>
+            <url>https://artifactory.wma.chs.usgs.gov/artifactory/wma-maven</url>
         </repository>
         <repository>
-            <id>aqcu-maven-centralized</id>
-            <name>AQCU Maven Centralized (Artifactory)</name>
-            <url>https://cida.usgs.gov/artifactory/aqcu-maven-centralized</url>
+            <id>eros-artifactory-maven-releases</id>
+            <name>EROS Artifactory Maven Releases</name>
+            <url>https://artifactory.wma.chs.usgs.gov/artifactory/eros-artifactory-wma-maven-releases</url>
         </repository>
     </repositories>
 
